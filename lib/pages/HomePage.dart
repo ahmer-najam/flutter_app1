@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app1/models/ProductModel.dart';
 import 'package:flutter_app1/widgets/Drawer.dart';
 import 'package:flutter_app1/widgets/ProductItemWidget.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   // const HomePage({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     Product.products = List.from(productsData)
         .map<Product>((product) => Product.fromMap(product))
         .toList();
-    print(Product.products);
+    // print(Product.products);
 
     setState(() {});
   }
@@ -42,13 +43,21 @@ class _HomePageState extends State<HomePage> {
         title: Text("Catalogue App"),
       ),
       body: (Product.products != null && Product.products.isNotEmpty)
-          ? ListView.builder(
-              // itemCount: products.length,
-              itemCount: Product.products.length,
+          ? GridView.builder(
+              gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 15, crossAxisSpacing: 15),
               itemBuilder: (context, index) {
-                // return ProductItemWidget(product: products[index]);
-                return ProductItemWidget(product: Product.products[index]);
+                final product = Product.products[index];
+                return Card(
+                  clipBehavior: Clip.antiAlias,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), 
+                  child:GridTile(
+                    header: Container(child: Text(product.name, style: TextStyle(color: Colors.white),), padding: EdgeInsets.all(15), decoration: BoxDecoration(color: Colors.blueGrey),),
+                    child: Image.network(product.image),
+                    footer: Text(product.price.toString())
+                    ));
               },
+              itemCount: Product.products.length,
             )
           : Center(
               child: CircularProgressIndicator(),
