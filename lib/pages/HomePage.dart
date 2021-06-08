@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final dummyList = List.generate(50, (index) => products[0]);
+  // final dummyList = List.generate(50, (index) => products[0]);
 
 // initState calls before build
   @override
@@ -26,10 +26,14 @@ class _HomePageState extends State<HomePage> {
     var catalogJson = await rootBundle.loadString("assets/files/catalog.json");
     var decodedData = jsonDecode(catalogJson);
     var productsData = decodedData["products"];
-    Product.formMap(map) = List.from(productsData)
-        .map<Product>((product) => Product.formMap(product))
+    Product.products =  List.from(productsData)
+        .map<Product>((product) =>  Product.fromMap(product))
         .toList();
-    print(productsData);
+    print(Product.products);
+
+    setState(() {
+
+    });
   }
 
   @override
@@ -40,10 +44,10 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView.builder(
         // itemCount: products.length,
-        itemCount: dummyList.length,
+        itemCount: Product.products.length,
         itemBuilder: (context, index) {
           // return ProductItemWidget(product: products[index]);
-          return ProductItemWidget(product: dummyList[index]);
+          return ProductItemWidget(product: Product.products[index]);
         },
       ),
       drawer: MyDarwer(),
