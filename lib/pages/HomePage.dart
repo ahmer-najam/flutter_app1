@@ -23,17 +23,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   loadData() async {
+    await Future.delayed(Duration(seconds: 1));
     var catalogJson = await rootBundle.loadString("assets/files/catalog.json");
     var decodedData = jsonDecode(catalogJson);
     var productsData = decodedData["products"];
-    Product.products =  List.from(productsData)
-        .map<Product>((product) =>  Product.fromMap(product))
+    Product.products = List.from(productsData)
+        .map<Product>((product) => Product.fromMap(product))
         .toList();
     print(Product.products);
 
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
@@ -42,14 +41,18 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("Catalogue App"),
       ),
-      body: ListView.builder(
-        // itemCount: products.length,
-        itemCount: Product.products.length,
-        itemBuilder: (context, index) {
-          // return ProductItemWidget(product: products[index]);
-          return ProductItemWidget(product: Product.products[index]);
-        },
-      ),
+      body: (Product.products != null && Product.products.isNotEmpty)
+          ? ListView.builder(
+              // itemCount: products.length,
+              itemCount: Product.products.length,
+              itemBuilder: (context, index) {
+                // return ProductItemWidget(product: products[index]);
+                return ProductItemWidget(product: Product.products[index]);
+              },
+            )
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
       drawer: MyDarwer(),
     );
   }
